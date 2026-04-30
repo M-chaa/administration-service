@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  mysql-admin:
+    image: mysql:8.0
+    container_name: mysql-admin
+    environment:
+      MYSQL_DATABASE: administration_service
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_admin_data:/var/lib/mysql
+
+  administration-service:
+    build: .
+    container_name: administration-service
+    ports:
+      - "8088:8088"
+    depends_on:
+      - mysql-admin
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-admin:3306/administration_service?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      EUREKA_CLIENT_ENABLED: "false"
+      SPRING_CLOUD_DISCOVERY_ENABLED: "false"
+
+volumes:
+  mysql_admin_data:
