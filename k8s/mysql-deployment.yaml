@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql-admin
+  template:
+    metadata:
+      labels:
+        app: mysql-admin
+    spec:
+      containers:
+        - name: mysql-admin
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_DATABASE
+              value: administration_service
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
